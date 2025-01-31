@@ -1,0 +1,35 @@
+services:
+  neo4j-5:
+    restart: always
+    container_name: neo4j-5
+    #image: neo4j:5.24
+    image: neo4j:5.26-enterprise
+    #command: |
+    #  /bin/bash -c 
+    #  "sleep infinity"
+    ports:
+      - 7474:7474
+      - 7687:7687
+    env_file: $HOME/neo4j-auth
+    environment:
+      - NEO4J_apoc_export_file_enabled=true
+      - NEO4J_apoc_import_file_enabled=true
+      - NEO4J_apoc_import_file_use__neo4j__config=true
+      - NEO4J_PLUGINS=["apoc", "graph-data-science"]
+      - NEO4J_ACCEPT_LICENSE_AGREEMENT=yes
+    volumes:
+      - /data/neo4j/logs:/logs
+      - /data/neo4j/config:/config
+      - /data/neo4j/data:/data
+      - /data/neo4j/plugins:/plugins
+      - /data/dumps:/import
+      #- /data/neo4j-5-docker/data:/data
+      #- /data/neo4j-5-docker/data:/data
+      #- /data/neo4j-5-docker/logs:/logs
+      ##- /data/neo4j-5-docker/import:/var/lib/neo4j/import
+      #- /data/neo4j-5-docker/plugins:/plugins
+      ##- /data/neo4j-5-docker/certificates:/var/lib/neo4j/certificates
+      ##- /neo4j-import:/import
+      #- /data/neo4j-5-docker/conf:/config
+
+

@@ -1,0 +1,3 @@
+#!/bin/bash
+
+docker exec -it neo4j-5 neo4j-admin database info

@@ -1,0 +1,40 @@
+#!/bin/bash
+
+# path on filesystem outside of docker where neo4j files will live 
+
+EXTERNALNEODIR=/data/neo4j
+
+if [ -z $EXTERNALNEODIR ]
+then
+  echo "ERROR: Could not find EXTERNALNEODIR var ($NEOBASE). Exiting."
+  exit 1
+fi
+
+mkdir -p $EXTERNALNEODIR 
+mkdir -p $EXTERNALNEODIR/conf
+mkdir -p $EXTERNALNEODIR/logs
+mkdir -p $EXTERNALNEODIR/data
+mkdir -p $EXTERNALNEODIR/plugins
+mkdir -p $EXTERNALNEODIR/certificates/https
+mkdir -p $EXTERNALNEODIR/certificates/bolt
+
+if [ ! -f $EXTERNALNEODIR/conf/neo4j.conf ]
+then
+  cp neo4j.conf-initial $EXTERNALNEODIR/conf/neo4j.conf
+fi
+
+if [ ! -f $EXTERNALNEODIR/certificates/https/private.key ]
+then
+  pushd $EXTERNALNEODIR/certificates/https
+  openssl req -x509 -nodes -days 365 -newkey rsa:2048   -subj "/CN=localhost"   -addext "subjectAltName = DNS:localhost.localdomain, DNS:my.custom.domain, IP:127.0.0.1, IP:192.168.100.5" -addext "keyUsage = critical, digitalSignature, keyEncipherment" -addext "extendedKeyUsage = serverAuth" -addext "authorityKeyIdentifier = keyid:always,issuer:always"  -keyout "private.key"  -out "public.crt"
+  cd ../bolt
+  ln -s ../https/private.key
+  ln -s ../https/public.crt
+  popd
+fi
+
+chown -R 7474:7474 $EXTERNALNEODIR
+
+docker compose up -d
+
+

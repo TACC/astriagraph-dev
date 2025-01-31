@@ -1,0 +1,4 @@
+#!/bin/bash
+
+docker exec -it --env-file ~/neo4j-userpass neo4j-5 cypher-shell -d system 
+

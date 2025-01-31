@@ -1,0 +1,31 @@
+#!/bin/bash
+
+# external = outside docker
+external_import_dir="/data/dumps" 
+
+# internal = inside docker
+internal_import_dir="/import" 
+
+if [ -z $1 ]
+then
+  echo "Must provide dump directory to import. Exiting."
+  echo "(Should be mounted under ${internal_import_dir} dir inside running neo4j container.)"
+  exit 1
+fi
+
+filey=$1
+
+if [ ! -f $external_import_dir/$filey/astria.dump ]
+then
+  echo "Could not find astria.dump file at $external_import_dir/$filey. Exiting."
+  echo "Note the dump file MUST be named astria.dump!" 
+  exit 1
+fi
+
+docker exec -it --env-file ~/neo4j-userpass neo4j-5 bash -c "neo4j-admin database load --from-path=/import/$filey astria"
+
+docker exec -it --env-file ~/neo4j-userpass neo4j-5 cypher-shell "create database astria;"
+
+echo "You might have to restart neo4j now."
+
+
