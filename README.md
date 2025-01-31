@@ -10,12 +10,16 @@ It puts the database and data in dir you define.
 
 1) Set up ~/neo4j-userpass & ~/neo4j-auth , e.g.
 
-    # cat ~/neo4j-userpass
-    NEO4J_USERNAME=neo4j
-    NEO4J_PASSWORD=changeme
+```
+# cat ~/neo4j-userpass
+NEO4J_USERNAME=neo4j
+NEO4J_PASSWORD=changeme
+```
 
-    # cat ~/neo4j-auth
-    NEO4J_AUTH=neo4j/changeme
+```
+# cat ~/neo4j-auth
+NEO4J_AUTH=neo4j/changeme
+```
 
 **NOTE** You cannot put these in the same file. If you put NEO4J_USERNAME & NEO4J_PASSWORD in the docker env it will mess up the config and not start neo4j. 
 
@@ -33,17 +37,25 @@ Make sure to run md5sum on the dump file and make sure it matches what's in the 
 
 Then run burnup (set up neo4j):
 
-    ./burnup
-    ...
+```
+./burnup
+...
+```
 
 Check that it's up:
     
-    ./info
+```
+./info
+```
 
 Count rows in database:
 
-    ./count
+```
+./count
+```
 
 Shut server down:
 
-    ./burndown
+```
+./burndown
+```
